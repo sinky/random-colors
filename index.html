@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8" />
+	<title>Random Colors</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+  
+  body {
+    line-height:0;
+  }
+  .color {
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+  }
+  
+  .color:hover {
+		box-shadow: inset 0 0 10px -2px #000;
+  }
+  
+  .hide{ display: none; }
+  </style>
+  
+</head>
+<body> 
+
+
+<div id="colorsrnd"></div>
+<div id="colorfall"></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="rainbowvis.js"></script>
+<script>
+var numberOfItems = 780;
+var maxNumberOfItems = 100;
+var s = [];
+
+$(document).ready(function(){
+  var rainbow = new Rainbow(); 
+  rainbow.setNumberRange(1, numberOfItems);
+
+  numberOfItems = Math.floor( $('body').innerWidth() / 50);
+  
+  addRandomRow(numberOfItems, '#colorsrnd');
+
+  interval = setInterval(function() {
+    var sel = '#colorfall';
+    if($(sel+" .color").length > maxNumberOfItems) {
+      $(sel+" .color:not('.rm'):lt("+numberOfItems+")").addClass('rm').fadeOut(function() {
+        $(this).remove();
+      });
+      //window.clearInterval(interval);
+    }  
+    addRandomRow(numberOfItems, sel);
+  }, '200');
+
+
+}); // END jQuery.ready
+
+function addRandomRow (numberOfItems, sel) {
+  for (var i = 1; i <= numberOfItems; i++) {
+    var hexColour = (function co(lor){   return (lor +=[0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })('');
+    var color = $('<div class="color">').css('background-color', '#'+hexColour).hide().attr('title', '#'+hexColour).click(function(){
+      console.log($(this).attr('title'));
+      prompt('HEX Color', $(this).attr('title'));
+    });
+    $(sel).append(color).show();
+    color.fadeIn();
+  }  
+}
+</script>
+</body>
+</html>
